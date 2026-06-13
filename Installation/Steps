@@ -1,0 +1,130 @@
+## 🚀 Installation
+
+### 1. Ubuntu Server Setup
+
+```bash
+# Update system packages
+sudo apt-get update && sudo apt-get upgrade -y
+```
+
+### 2. Wazuh Manager Installation (All-in-One)
+
+```bash
+# Download and execute Wazuh installation script
+curl -sO https://packages.wazuh.com/4.9/wazuh-install.sh && sudo bash wazuh-install.sh -a -i
+```
+
+This installs:
+- Wazuh Manager
+- Wazuh Indexer (OpenSearch)
+- Wazuh Dashboard
+
+### 3. Verify Services
+
+```bash
+sudo systemctl status wazuh-manager
+sudo systemctl status wazuh-indexer
+sudo systemctl status wazuh-dashboard
+```
+
+### 4. Access Dashboard
+
+Open a browser on Windows host and navigate to:
+```
+https://192.168.248.132
+```
+> Accept the self-signed certificate warning and log in with the credentials shown at the end of the installation script.
+
+---
+
+## 🖥️ Wazuh Agent — Windows Deployment
+
+### 1. Install Agent via PowerShell (Admin)
+
+```powershell
+msiexec /i "wazuh-agent-4.9.2-1.msi" WAZUH_MANAGER="192.168.248.132" /l*v "C:\wazuh-install.log"
+```
+
+### 2. Register Agent on Ubuntu Manager
+
+```bash
+sudo /var/ossec/bin/manage_agents
+# Select A to add agent
+# Name: WindowsHost
+# IP: 192.168.248.1
+# Select E to extract key
+```
+
+### 3. Apply Key and Start Service
+
+In Wazuh Agent GUI on Windows:
+- Paste the authentication key
+- Set Manager IP: `192.168.248.132`
+- Click Save
+
+```powershell
+NET START WazuhSvc
+```
+
+---
+
+## 🔍 File Integrity Monitoring (FIM)
+
+### Configuration
+
+Edit the agent configuration file on Windows:
+```
+C:\Program Files (x86)\ossec-agent\ossec.conf
+```
+
+Add inside the `<syscheck>` block:
+```xml
+<directories realtime="yes">C:\Users\Selld\Test</directories>
+```
+
+Restart the agent:
+```powershell
+NET STOP WazuhSvc; NET START WazuhSvc
+```
+
+### Testing FIM
+
+```powershell
+# Create test file
+echo "test file" > C:\Users\Selld\Test\prueba.txt
+
+# Modify test file
+echo "modified" >> C:\Users\Selld\Test\prueba.txt
+
+# Delete test file
+Remove-Item C:\Users\Selld\Test\prueba.txt
+```
+
+---
+
+## 📊 Results
+
+The Wazuh dashboard successfully captured all file system events in real time:
+
+| Timestamp | Event | File | Rule | Level |
+|---|---|---|---|---|
+| Jun 4, 2026 @ 20:55:52 | **added** | c:\users\selld\test\prueba.txt | File added to the system | 5 |
+| Jun 4, 2026 @ 20:55:55 | **modified** | c:\users\selld\test\prueba.txt | Integrity checksum changed | 7 |
+| Jun 4, 2026 @ 20:56:55 | **deleted** | c:\users\selld\test\prueba.txt | File deleted | 7 |
+
+### Agent Status in Dashboard
+
+- **Agent ID:** 004
+- **Agent Name:** LAPTOP-CN8MGQMI
+- **OS:** Microsoft Windows 11 Pro 10.0.26200.7840
+- **Status:** ✅ Active
+- **Wazuh Version:** v4.9.2
+
+---
+
+## 👤 Author
+
+**alexrepsec**  
+Cybersecurity enthusiast | Home Lab Builder  
+
+> *This project was built as part of a cybersecurity portfolio to demonstrate practical SIEM deployment and endpoint monitoring skills.*
