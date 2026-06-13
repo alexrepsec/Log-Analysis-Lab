@@ -19,13 +19,6 @@ This project demonstrates the deployment of a **Wazuh SIEM (Security Information
 - Network analysis tools (such as Wireshark) for capturing and examining network traffic.
 - Telemetry generation tools to create realistic network traffic and attack scenarios.
 
-| Component | Host | IP | Role |
-|---|---|---|---|
-| Wazuh Manager | Ubuntu Server 22.04 (VMware) | 192.168.248.132 | Collects, analyzes and stores security data |
-| Wazuh Agent | Windows 11 Pro (Host) | 192.168.248.1 | Sends logs and system events to the manager |
-
----
-
 ## 🧰 Technologies Used
 
 - **Wazuh 4.9.2** — Open-source SIEM & XDR platform
@@ -86,3 +79,12 @@ Example below.
 │   │   └────────────┘ └───────────┘ └──────────────┘  │  │
 │   └──────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────┘
+
+```
+
+| Component | Host | IP | Role |
+|---|---|---|---|
+| Wazuh Manager | Ubuntu Server 22.04 (VMware) | 192.168.248.132 | Collects, analyzes and stores security data |
+| Wazuh Agent | Windows 11 Pro (Host) | 192.168.248.1 | Sends logs and system events to the manager |
+
+---
