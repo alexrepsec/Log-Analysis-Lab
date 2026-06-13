@@ -1,4 +1,4 @@
-# wazuh-siem-homelab
+# Wazuh-SIEM-Homelab
 
 ## Objective
 
