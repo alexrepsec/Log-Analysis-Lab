@@ -13,11 +13,7 @@ This project demonstrates the deployment of a **Wazuh SIEM (Security Information
 - Implementing real-time File Integrity Monitoring using Wazuh Syscheck 
 - Analyzing security events through the Wazuh web dashboard
 
-### Tools Used
-
-- Security Information and Event Management (SIEM) system for log ingestion and analysis.
-- Network analysis tools (such as Wireshark) for capturing and examining network traffic.
-- Telemetry generation tools to create realistic network traffic and attack scenarios.
+---
 
 ## 🧰 Technologies Used
 
@@ -49,7 +45,7 @@ This project demonstrates the deployment of a **Wazuh SIEM (Security Information
 - Internet access on the VM
 - Administrative access on Windows host
 
-Example below.
+---
 
 ## 🏗️ Lab Architecture
 
@@ -79,7 +75,6 @@ Example below.
 │   │   └────────────┘ └───────────┘ └──────────────┘  │  │
 │   └──────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────┘
-
 ```
 
 | Component | Host | IP | Role |
@@ -87,10 +82,112 @@ Example below.
 | Wazuh Manager | Ubuntu Server 22.04 (VMware) | 192.168.248.132 | Collects, analyzes and stores security data |
 | Wazuh Agent | Windows 11 Pro (Host) | 192.168.248.1 | Sends logs and system events to the manager |
 
+---
+
+## 🚀 Step 1 — Wazuh Manager Installation
+
+Ubuntu Server 22.04 was deployed in VMware Workstation and Wazuh was installed using the all-in-one script:
+
+```bash
+sudo apt-get update && sudo apt-get upgrade -y
+curl -sO https://packages.wazuh.com/4.9/wazuh-install.sh && sudo bash wazuh-install.sh -a -i
+sudo systemctl enable wazuh-indexer wazuh-manager wazuh-dashboard
+```
+
+![Services Running](screenshots/services-running.png)
+
+---
+
+## 🖥️ Step 2 — Wazuh Dashboard
+
+After installation, the dashboard was accessed from the Windows host browser at `https://192.168.248.132`.
+
+![Dashboard Overview](screenshots/dashboard-overview.png)
+
+---
+
+## 🔌 Step 3 — Windows Agent Deployment
+
+The Wazuh agent was installed on the Windows 11 host and registered with the manager using an authentication key.
+
+```powershell
+msiexec /i "wazuh-agent-4.9.2-1.msi" WAZUH_MANAGER="192.168.248.132"
+NET START WazuhSvc
+```
+
+![Agent Active](screenshots/agent-active.png)
+
+---
+
+## 🔍 Step 4 — File Integrity Monitoring (FIM)
+
+The agent was configured to monitor a test folder in real time by editing `ossec.conf`:
+
+```xml
+<directories realtime="yes">C:\Users\Selld\Test</directories>
+```
+
+Files were created, modified, and deleted in the monitored folder to generate FIM events.
+
+![FIM Dashboard](screenshots/fim-dashboard.png)
+
+![FIM Events](screenshots/fim-events.png)
+
+![File Inventory](screenshots/file-inventory.png)
+
+---
+
+## 🛡️ Step 5 — Vulnerability Detection
+
+Wazuh automatically scanned the Windows endpoint and detected vulnerabilities by CVE severity.
+
+![Vulnerability Detection](screenshots/vulnerability-detection.png)
+
+---
+
+## ⚔️ Step 6 — MITRE ATT&CK Integration
+
+Wazuh mapped detected events to MITRE ATT&CK tactics including Defense Evasion, Persistence, and Privilege Escalation.
+
+![MITRE ATT&CK](screenshots/mitre-attack.png)
+
+---
+
+## 📋 Step 7 — CIS Benchmark (Security Configuration Assessment)
+
+Wazuh ran a CIS Microsoft Windows 11 Enterprise Benchmark assessment against the endpoint, scoring 33% (128 passed / 259 failed out of 395 checks).
+
+![CIS Benchmark](screenshots/cis-benchmark.png)
+
+---
+
+## 📁 Project Structure
+
+```
+Log-Analysis-Lab/
+├── screenshots/
+│   ├── agent-active.png
+│   ├── cis-benchmark.png
+│   ├── dashboard-overview.png
+│   ├── file-inventory.png
+│   ├── fim-dashboard.png
+│   ├── fim-events.png
+│   ├── mitre-attack.png
+│   ├── services-running.png
+│   └── vulnerability-detection.png
+├── configs/
+│   └── ossec-agent.conf
+├── installation/
+│   └── Steps
+├── LICENSE
+└── README.md
+```
+
+---
 
 ## 👤 Author
 
 **alexrepsec**  
 Cybersecurity enthusiast | Home Lab Builder  
 
- *This project was built as part of a cybersecurity portfolio to demonstrate practical SIEM deployment and endpoint monitoring skills.* 
+*This project was built as part of a cybersecurity portfolio to demonstrate practical SIEM deployment and endpoint monitoring skills.*
