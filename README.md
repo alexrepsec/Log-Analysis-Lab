@@ -1,6 +1,6 @@
 # Wazuh-SIEM-Homelab
 
-## Objective
+## ✅ Objective 
 
 This project demonstrates the deployment of a **Wazuh SIEM (Security Information and Event Management)** in a home lab environment using VMware Workstation. The lab covers the full setup of a Wazuh Manager on Ubuntu Server, agent deployment on a Windows 11 host, and real-time **File Integrity Monitoring (FIM)** using Wazuh's Syscheck module.
 
