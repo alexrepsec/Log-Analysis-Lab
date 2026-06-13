@@ -2,15 +2,16 @@
 
 ## Objective
 
-The Detection Lab project aimed to establish a controlled environment for simulating and detecting cyber attacks. The primary focus was to ingest and analyze logs within a Security Information and Event Management (SIEM) system, generating test telemetry to mimic real-world attack scenarios. This hands-on experience was designed to deepen understanding of network security, attack patterns, and defensive strategies.
+This project demonstrates the deployment of a **Wazuh SIEM (Security Information and Event Management)** in a home lab environment using VMware Workstation. The lab covers the full setup of a Wazuh Manager on Ubuntu Server, agent deployment on a Windows 11 host, and real-time **File Integrity Monitoring (FIM)** using Wazuh's Syscheck module.
 
 ### Skills Learned
 
-- Advanced understanding of SIEM concepts and practical application.
-- Proficiency in analyzing and interpreting network logs.
-- Ability to generate and recognize attack signatures and patterns.
-- Enhanced knowledge of network protocols and security vulnerabilities.
-- Development of critical thinking and problem-solving skills in cybersecurity.
+- Deploying a fully functional SIEM in a virtualized home lab environment 
+- Configuring VMware NAT networking for VM-to-host communication 
+- Installing and configuring Wazuh all-in-one stack on Ubuntu Server 
+- Registering and authenticating Windows endpoints as Wazuh agents 
+- Implementing real-time File Integrity Monitoring using Wazuh Syscheck 
+- Analyzing security events through the Wazuh web dashboard
 
 ### Tools Used
 
@@ -18,11 +19,70 @@ The Detection Lab project aimed to establish a controlled environment for simula
 - Network analysis tools (such as Wireshark) for capturing and examining network traffic.
 - Telemetry generation tools to create realistic network traffic and attack scenarios.
 
-## Steps
-drag & drop screenshots here or use imgur and reference them using imgsrc
+| Component | Host | IP | Role |
+|---|---|---|---|
+| Wazuh Manager | Ubuntu Server 22.04 (VMware) | 192.168.248.132 | Collects, analyzes and stores security data |
+| Wazuh Agent | Windows 11 Pro (Host) | 192.168.248.1 | Sends logs and system events to the manager |
 
-Every screenshot should have some text explaining what the screenshot is about.
+---
+
+## 🧰 Technologies Used
+
+- **Wazuh 4.9.2** — Open-source SIEM & XDR platform
+- **Ubuntu Server 22.04 LTS** — Wazuh Manager host OS
+- **Windows 11 Pro** — Monitored endpoint (Wazuh Agent)
+- **VMware Workstation** — Virtualization platform
+- **OpenSearch** — Wazuh Indexer backend
+- **Wazuh Dashboard** — Web-based visualization interface
+
+---
+
+## ⚙️ Environment Setup
+
+### Virtual Machine Specifications
+
+| Parameter | Value |
+|---|---|
+| OS | Ubuntu Server 22.04.4 LTS |
+| RAM | 4 GB |
+| CPU | 2 cores |
+| Storage | 50 GB (LVM) |
+| Network | VMware NAT (VMnet8) |
+
+### Prerequisites
+
+- VMware Workstation installed
+- Ubuntu Server 22.04 ISO
+- Internet access on the VM
+- Administrative access on Windows host
 
 Example below.
 
-*Ref 1: Network Diagram*
+## 🏗️ Lab Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     HOST MACHINE                         │
+│                  Windows 11 Pro                          │
+│              IP: 192.168.248.1                           │
+│                                                          │
+│   ┌──────────────────┐        ┌──────────────────────┐  │
+│   │   Wazuh Agent    │        │   Web Browser        │  │
+│   │   v4.9.2         │──────► │   Dashboard Access   │  │
+│   │   (ossec-agent)  │        │   https://           │  │
+│   └────────┬─────────┘        │   192.168.248.132    │  │
+│            │                  └──────────────────────┘  │
+│            │ VMware NAT (VMnet8)                         │
+│            ▼                                             │
+│   ┌──────────────────────────────────────────────────┐  │
+│   │           VMware Virtual Machine                  │  │
+│   │           Ubuntu Server 22.04 LTS                 │  │
+│   │           IP: 192.168.248.132                     │  │
+│   │                                                    │  │
+│   │   ┌────────────┐ ┌───────────┐ ┌──────────────┐  │  │
+│   │   │   Wazuh    │ │  Wazuh    │ │    Wazuh     │  │  │
+│   │   │  Manager   │ │  Indexer  │ │  Dashboard   │  │  │
+│   │   │            │ │(OpenSearch│ │  (port 443)  │  │  │
+│   │   └────────────┘ └───────────┘ └──────────────┘  │  │
+│   └──────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
