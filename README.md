@@ -1,4 +1,4 @@
-# Log-Analysis-Lab
+# wazuh-siem-homelab
 
 ## Objective
 
