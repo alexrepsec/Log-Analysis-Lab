@@ -87,4 +87,10 @@ Example below.
 | Wazuh Manager | Ubuntu Server 22.04 (VMware) | 192.168.248.132 | Collects, analyzes and stores security data |
 | Wazuh Agent | Windows 11 Pro (Host) | 192.168.248.1 | Sends logs and system events to the manager |
 
----
+
+## 👤 Author
+
+**alexrepsec**  
+Cybersecurity enthusiast | Home Lab Builder  
+
+ *This project was built as part of a cybersecurity portfolio to demonstrate practical SIEM deployment and endpoint monitoring skills.* 
